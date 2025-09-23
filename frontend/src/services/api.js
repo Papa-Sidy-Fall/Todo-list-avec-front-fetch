@@ -88,9 +88,16 @@ class ApiService {
   }
 
   async createTask(taskData) {
+    // Détecter si c'est un FormData (pour l'upload d'image)
+    const isFormData = taskData instanceof FormData;
+
     return this.request('/taches', {
       method: 'POST',
-      body: JSON.stringify(taskData),
+      body: isFormData ? taskData : JSON.stringify(taskData),
+      headers: isFormData ? {
+        // Ne pas définir Content-Type pour FormData, le navigateur le fait automatiquement
+        ...(this.token && { Authorization: `Bearer ${this.token}` }),
+      } : undefined,
     });
   }
 

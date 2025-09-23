@@ -20,9 +20,9 @@ model Taches {
   status      Etat   @default(EN_COURS)
   userId      Int
   assignedTo  Int?
+  imageUrl    String?
   user        User   @relation(fields: [userId], references: [id])
   assignedUser User? @relation("AssignedTasks", fields: [assignedTo], references: [id])
-  // imageUrl    String
 }
 
 enum Etat {

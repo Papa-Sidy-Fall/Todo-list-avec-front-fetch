@@ -7,7 +7,7 @@ export declare class TacheService {
         totalPages: number;
     }>;
     findById(id: number): Promise<Taches | null>;
-    create(data: Omit<Taches, "id">): Promise<Taches>;
+    create(data: any): Promise<Taches>;
     update(id: number, data: any): Promise<Taches>;
     delete(id: number): Promise<void>;
     updateStatus(id: number, newStatus: Etat): Promise<{
@@ -17,6 +17,7 @@ export declare class TacheService {
         status: import("@prisma/client").$Enums.Etat;
         userId: number;
         assignedTo: number | null;
+        imageUrl: string | null;
     }>;
 }
 //# sourceMappingURL=tacheService.d.ts.map

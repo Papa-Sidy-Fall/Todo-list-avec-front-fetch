@@ -13,7 +13,7 @@ export class TacheService {
     async findById(id: number): Promise<Taches | null> {
            return await repo.findById(id)
     }
-    async create(data: Omit<Taches, "id">): Promise<Taches> {
+    async create(data: any): Promise<Taches> {
             const tache = await repo.create(data);
             // Retourner la tâche avec les informations de l'utilisateur
             return await repo.findById(tache.id) as Taches;

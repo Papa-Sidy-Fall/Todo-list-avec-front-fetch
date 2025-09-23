@@ -16,8 +16,14 @@ app.use(cors({
 }))
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static('uploads'))
+
 app.use("/users", userRoute)
 app.use("/auth", authRoute)
+app.use("/taches", tacheroute)
 
 
 app.use(authMiddleware)

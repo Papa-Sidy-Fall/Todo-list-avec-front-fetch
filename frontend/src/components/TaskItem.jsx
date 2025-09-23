@@ -251,6 +251,17 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
           {task.description}
         </p>
 
+        {/* Image */}
+        {task.imageUrl && (
+          <div className="mb-6">
+            <img
+              src={`http://localhost:3080${task.imageUrl}`}
+              alt="Image de la tâche"
+              className="w-full h-48 object-cover rounded-lg shadow-sm border border-gray-200"
+            />
+          </div>
+        )}
+
         {/* Informations utilisateur */}
         <div className="space-y-3 mb-6">
           {task.user && (

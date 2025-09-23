@@ -18,6 +18,7 @@ export declare class TacheRepositorie implements IRepository<Taches> {
         status: import("@prisma/client").$Enums.Etat;
         userId: number;
         assignedTo: number | null;
+        imageUrl: string | null;
     }>;
 }
 //# sourceMappingURL=tacheRepositorie.d.ts.map

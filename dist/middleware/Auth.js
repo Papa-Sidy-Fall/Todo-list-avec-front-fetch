@@ -13,7 +13,7 @@ export const authMiddleware = (req, res, next) => {
         return next();
     }
     catch (error) {
-        res.status(403).json({ message: "Erreur serveur" });
+        res.status(403).json({ message: "Token invalide" });
     }
 };
 export const authorisationMiddleware = async (req, res, next) => {

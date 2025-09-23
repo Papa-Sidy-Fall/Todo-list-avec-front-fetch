@@ -2,6 +2,7 @@ import  type{Request,Response} from "express"
 import { TacheService } from "../service/tacheService.js"
 import type {Etat} from "@prisma/client"
 import {tacheValidator} from "../validator/tacheValidator.js"
+import { upload } from "../middleware/uploadImage.js"
 
 const service = new TacheService()
 export class TacheController {
@@ -38,23 +39,52 @@ export class TacheController {
     }
     async create(req:Request, res:Response){
         try{
-            const data = tacheValidator.parse(req.body)
-            const  userId = (req as any).user.userId
-            //cela nous permet de ne pas mettre userid au niveau de postaman quand on creer une tache
+            // Vérifier que les champs requis sont présents
+            if (!req.body.titre || !req.body.description || !req.body.status) {
+                return res.status(400).json({message: "Champs requis manquants"});
+            }
+
+            // Convertir les données du formulaire
+            const formData = {
+                titre: req.body.titre,
+                description: req.body.description,
+                status: req.body.status,
+                assignedTo: req.body.assignedTo && req.body.assignedTo !== '' && req.body.assignedTo !== 'null' ? parseInt(req.body.assignedTo) : null
+            };
+
+            // Validation avec Zod
+            const data = tacheValidator.parse(formData);
+
+            const userId = (req as any).user?.userId;
+            if (!userId) {
+                return res.status(401).json({message: "Utilisateur non authentifié"});
+            }
+
+            // Gérer l'upload d'image
+            let imageUrl = null;
+            if ((req as any).file) {
+                imageUrl = `/uploads/${(req as any).file.filename}`;
+            }
+
+            // Préparer les données finales
             const newdata = {
              ...data,
              userId : userId,
-             assignedTo: data.assignedTo || null
-            }
-            const tache = await service.create(newdata)
-            res.status(201).json(tache)
+             assignedTo: data.assignedTo || null,
+             imageUrl: imageUrl
+            };
+
+            // Créer la tâche
+            const tache = await service.create(newdata);
+
+            res.status(201).json(tache);
         }
         catch(error)
         {
             if ((error as any).issues) {
-                res.status(400).json({message:"Erreurs de validation", errors: (error as any).issues.map((i: any) => ({field: i.path.join('.'), message: i.message}))})
+                res.status(400).json({message:"Erreurs de validation", errors: (error as any).issues.map((i: any) => ({field: i.path.join('.'), message: i.message}))});
             } else {
-                res.status(500).json({message:"fall donner yi douguoul"})
+                res.status(500).json({message:"Erreur lors de la création de la tâche", error: (error as Error).message});
             }
         }
 
