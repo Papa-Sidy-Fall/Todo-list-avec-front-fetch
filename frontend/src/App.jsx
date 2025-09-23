@@ -34,7 +34,7 @@ const AppContent = () => {
       {currentView === 'login' ? (
         <div>
           <Login onLoginSuccess={handleLoginSuccess} />
-          <div className="text-center mt-5">
+          <div className="text-center">
             <p>Pas encore de compte ?{' '}
               <button
                 onClick={switchToRegister}
@@ -48,7 +48,7 @@ const AppContent = () => {
       ) : currentView === 'register' ? (
         <div>
           <Register onRegisterSuccess={handleRegisterSuccess} />
-          <div className="text-center mt-5">
+          <div className="text-center">
             <p>Déjà un compte ?{' '}
               <button
                 onClick={switchToLogin}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 import TaskItem from './TaskItem';
@@ -6,21 +7,31 @@ import TaskForm from './TaskForm';
 import Pagination from './Pagination';
 
 const TaskList = ({ onLogout }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // États pour la pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(2); // Seulement 3 tâches par page pour forcer la pagination
+  // États synchronisés avec l'URL
+  const [currentPage, setCurrentPage] = useState(() => {
+    const page = parseInt(searchParams.get('page')) || 1;
+    return page;
+  });
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    const limit = parseInt(searchParams.get('limit')) || 10;
+    return limit;
+  });
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
   // État pour contrôler la visibilité du formulaire (caché par défaut)
   const [showTaskForm, setShowTaskForm] = useState(false);
 
-  // État pour le filtre actif
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'created', 'assigned'
+  // État pour le filtre actif synchronisé avec l'URL
+  const [activeFilter, setActiveFilter] = useState(() => {
+    const filter = searchParams.get('filter') || 'all';
+    return filter;
+  });
 
   // Récupérer l'utilisateur connecté
   const { user } = useAuth();
@@ -41,6 +52,16 @@ const TaskList = ({ onLogout }) => {
     }
   };
 
+  // Synchroniser l'état avec l'URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (currentPage !== 1) params.set('page', currentPage.toString());
+    if (itemsPerPage !== 10) params.set('limit', itemsPerPage.toString());
+    if (activeFilter !== 'all') params.set('filter', activeFilter);
+
+    setSearchParams(params, { replace: true });
+  }, [currentPage, itemsPerPage, activeFilter, setSearchParams]);
+
   useEffect(() => {
     fetchTasks(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
@@ -52,6 +73,11 @@ const TaskList = ({ onLogout }) => {
   const handleItemsPerPageChange = (limit) => {
     setItemsPerPage(limit);
     setCurrentPage(1);
+  };
+
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    setCurrentPage(1); // Reset to first page when changing filter
   };
 
   const handleTaskCreated = () => {
@@ -173,7 +199,7 @@ const TaskList = ({ onLogout }) => {
           </div>
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={() => setActiveFilter('all')}
+              onClick={() => handleFilterChange('all')}
               className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
                 activeFilter === 'all'
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -186,7 +212,7 @@ const TaskList = ({ onLogout }) => {
               Toutes les tâches
             </button>
             <button
-              onClick={() => setActiveFilter('created')}
+              onClick={() => handleFilterChange('created')}
               className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
                 activeFilter === 'created'
                   ? 'bg-green-600 text-white shadow-lg'
@@ -199,7 +225,7 @@ const TaskList = ({ onLogout }) => {
               Créées par moi
             </button>
             <button
-              onClick={() => setActiveFilter('assigned')}
+              onClick={() => handleFilterChange('assigned')}
               className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
                 activeFilter === 'assigned'
                   ? 'bg-purple-600 text-white shadow-lg'
