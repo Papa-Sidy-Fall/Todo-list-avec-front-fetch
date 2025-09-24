@@ -1,3 +1,18 @@
+/**
+ * Composant ImageUploadSection - Section d'upload d'images pour les tâches
+ *
+ * Ce composant gère l'upload d'images dans le formulaire de création de tâches :
+ * - Validation du type de fichier (images uniquement)
+ * - Validation de la taille (max 5MB)
+ * - Aperçu de l'image sélectionnée
+ * - Possibilité de supprimer l'image
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {File} [props.selectedImage] - Fichier image sélectionné
+ * @param {string} [props.imagePreview] - URL de données pour l'aperçu
+ * @param {Function} props.onImageChange - Fonction appelée avec (file, error, preview)
+ * @param {Function} props.onRemoveImage - Fonction appelée pour supprimer l'image
+ */
 import React from 'react';
 
 const ImageUploadSection = ({

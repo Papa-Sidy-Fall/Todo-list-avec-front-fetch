@@ -1,3 +1,19 @@
+/**
+ * Composant TaskFilters - Filtres interactifs pour les tâches
+ *
+ * Ce composant fournit des boutons de filtrage pour afficher :
+ * - Toutes les tâches
+ * - Tâches créées par l'utilisateur connecté
+ * - Tâches assignées à l'utilisateur connecté
+ *
+ * Met à jour dynamiquement le compteur de tâches affichées.
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} props.activeFilter - Filtre actuellement actif ('all', 'created', 'assigned')
+ * @param {Function} props.onFilterChange - Fonction appelée lors du changement de filtre
+ * @param {number} props.taskCount - Nombre de tâches affichées avec le filtre actuel
+ * @param {string} [props.className=''] - Classes CSS additionnelles
+ */
 import React from 'react';
 
 const TaskFilters = ({

@@ -1,3 +1,16 @@
+/**
+ * Composant TaskStats - Affichage des statistiques des tâches
+ *
+ * Ce composant affiche les statistiques des tâches sous forme de cartes colorées :
+ * - Nombre de tâches en cours (jaune)
+ * - Nombre de tâches terminées (vert)
+ *
+ * Utilise des gradients et des icônes pour une présentation moderne.
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {Object} props.stats - Statistiques des tâches {EN_COURS: number, TERMINER: number}
+ * @param {string} [props.className=''] - Classes CSS additionnelles
+ */
 import React from 'react';
 
 const TaskStats = ({ stats, className = '' }) => {

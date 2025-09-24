@@ -1,4 +1,32 @@
-import React from 'react';
+/**
+ * Composant AudioRecordingSection - Section d'enregistrement audio pour les tâches
+ *
+ * Ce composant permet d'enregistrer et gérer des notes audio avec une limite de temps :
+ * - Contrôles d'enregistrement (démarrer/arrêter)
+ * - Limite automatique de 30 secondes maximum par enregistrement
+ * - Compteur de temps en temps réel (format MM:SS)
+ * - Barre de progression visuelle pendant l'enregistrement
+ * - Avertissement 5 secondes avant la fin automatique
+ * - Indicateur visuel d'enregistrement en cours (point rouge animé)
+ * - Lecteur audio intégré pour l'aperçu avec durée affichée
+ * - Possibilité de supprimer l'enregistrement
+ *
+ * Fonctionnalités techniques :
+ * - Utilise l'API MediaRecorder du navigateur
+ * - Timer automatique avec setInterval (1 seconde)
+ * - Arrêt forcé après 30 secondes
+ * - Nettoyage automatique des timers
+ * - Gestion d'état réactive du temps écoulé
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {boolean} props.isRecording - Si l'enregistrement est en cours
+ * @param {Blob} [props.audioBlob] - Blob audio enregistré
+ * @param {string} [props.audioUrl] - URL de l'audio pour le lecteur
+ * @param {Function} props.onStartRecording - Fonction pour démarrer l'enregistrement
+ * @param {Function} props.onStopRecording - Fonction pour arrêter l'enregistrement (appelée automatiquement après 30s)
+ * @param {Function} props.onRemoveAudio - Fonction pour supprimer l'audio
+ */
+import React, { useState, useEffect, useRef } from 'react';
 
 const AudioRecordingSection = ({
   isRecording,
@@ -8,10 +36,56 @@ const AudioRecordingSection = ({
   onStopRecording,
   onRemoveAudio
 }) => {
+  const [recordingTime, setRecordingTime] = useState(0);
+  const timerRef = useRef(null);
+  const MAX_RECORDING_TIME = 30; // 30 secondes maximum
+
+  // Démarre le timer quand l'enregistrement commence
+  useEffect(() => {
+    if (isRecording) {
+      setRecordingTime(0);
+      timerRef.current = setInterval(() => {
+        setRecordingTime(prev => {
+          const newTime = prev + 1;
+          // Arrêter automatiquement après 30 secondes
+          if (newTime >= MAX_RECORDING_TIME) {
+            onStopRecording();
+            return MAX_RECORDING_TIME;
+          }
+          return newTime;
+        });
+      }, 1000);
+    } else {
+      // Nettoyer le timer quand l'enregistrement s'arrête
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setRecordingTime(0);
+    }
+
+    // Nettoyer le timer au démontage du composant
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isRecording, onStopRecording]);
+
+  // Formater le temps en MM:SS
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Calculer le pourcentage de progression (pour la barre de progression)
+  const progressPercentage = (recordingTime / MAX_RECORDING_TIME) * 100;
+
   return (
     <div className="md:col-span-2">
       <label className="block text-sm font-semibold text-gray-700 mb-2">
-        Enregistrement audio (optionnel)
+        Enregistrement audio (optionnel) - Max 30 secondes
       </label>
       <div className="space-y-4">
         {/* Contrôles d'enregistrement */}
@@ -41,18 +115,44 @@ const AudioRecordingSection = ({
           )}
 
           {isRecording && (
-            <div className="flex items-center text-red-600">
-              <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse mr-2"></div>
-              Enregistrement en cours...
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center text-red-600">
+                <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse mr-2"></div>
+                <span className="font-medium">Enregistrement en cours...</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
+                  {formatTime(recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
+                </span>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Visualiseur audio */}
+        {/* Barre de progression pendant l'enregistrement */}
+        {isRecording && (
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-red-600 h-2 rounded-full transition-all duration-1000 ease-linear"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        )}
+
+        {/* Message d'avertissement quand on approche de la limite */}
+        {isRecording && recordingTime >= 25 && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-2 rounded-lg text-sm">
+            ⚠️ L'enregistrement s'arrêtera automatiquement dans {MAX_RECORDING_TIME - recordingTime} seconde{MAX_RECORDING_TIME - recordingTime > 1 ? 's' : ''}.
+          </div>
+        )}
+
+        {/* Lecteur audio */}
         {audioBlob && (
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-gray-700">Aperçu de l'audio</h4>
+              <h4 className="text-sm font-semibold text-gray-700">
+                Aperçu de l'audio ({formatTime(recordingTime)})
+              </h4>
               <button
                 type="button"
                 onClick={onRemoveAudio}

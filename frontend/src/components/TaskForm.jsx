@@ -1,3 +1,19 @@
+/**
+ * Composant TaskForm - Formulaire principal de création/modification de tâches
+ *
+ * Ce composant orchestre la création de nouvelles tâches avec :
+ * - Champs principaux (titre, description, statut, assignation)
+ * - Upload d'images avec validation et aperçu
+ * - Enregistrement audio avec contrôles intégrés
+ * - Validation en temps réel et gestion d'erreurs
+ * - Soumission multipart (texte + fichiers)
+ *
+ * Structure modulaire utilisant des sous-composants spécialisés pour
+ * maintenir une séparation claire des responsabilités.
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {Function} props.onTaskCreated - Fonction appelée après création réussie
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import ImageUploadSection from './ImageUploadSection';

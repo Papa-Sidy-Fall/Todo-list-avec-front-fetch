@@ -1,3 +1,22 @@
+/**
+ * Composant FileUpload - Upload de fichiers avec drag & drop
+ *
+ * Ce composant fournit une interface moderne pour l'upload de fichiers avec :
+ * - Drag & drop depuis le bureau
+ * - Sélection classique via bouton
+ * - Aperçu des fichiers sélectionnés
+ * - Validation des types et tailles
+ * - Interface responsive et accessible
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} props.accept - Types de fichiers acceptés (ex: "image/*")
+ * @param {Function} props.onFileSelect - Fonction appelée avec les fichiers sélectionnés
+ * @param {Object} [props.preview] - Objet d'aperçu {url, type}
+ * @param {string} props.label - Label du champ d'upload
+ * @param {Function} [props.icon] - Fonction retournant l'icône SVG
+ * @param {string} [props.className=''] - Classes CSS additionnelles
+ * @param {boolean} [props.multiple=false] - Si plusieurs fichiers peuvent être sélectionnés
+ */
 import React, { useRef, useState } from 'react';
 
 const FileUpload = ({

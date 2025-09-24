@@ -79,12 +79,12 @@ const TaskList = ({ onLogout }) => {
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
-    setCurrentPage(1); // Reset to first page when changing filter
+    setCurrentPage(1); 
   };
 
   const handleTaskCreated = () => {
     fetchTasks(currentPage, itemsPerPage);
-    setShowTaskForm(false); // Cacher le formulaire après création
+    setShowTaskForm(false); 
   };
 
   const handleTaskUpdated = () => {

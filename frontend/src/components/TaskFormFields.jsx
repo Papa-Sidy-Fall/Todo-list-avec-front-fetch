@@ -1,3 +1,21 @@
+/**
+ * Composant TaskFormFields - Champs principaux du formulaire de tâche
+ *
+ * Ce composant regroupe tous les champs de formulaire pour créer/modifier une tâche :
+ * - Titre (obligatoire, avec validation)
+ * - Description (optionnelle, avec compteur de caractères)
+ * - Statut (sélecteur avec options prédéfinies)
+ * - Assignation (liste des utilisateurs disponibles)
+ *
+ * Gère la validation en temps réel et l'affichage des erreurs.
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {Object} props.formData - Données du formulaire {titre, description, status, assignedTo}
+ * @param {Object} props.fieldErrors - Erreurs de validation par champ
+ * @param {Object} props.touched - Champs qui ont été touchés par l'utilisateur
+ * @param {Array} props.users - Liste des utilisateurs disponibles pour l'assignation
+ * @param {Function} props.onChange - Fonction appelée lors du changement d'un champ
+ */
 import React from 'react';
 
 const TaskFormFields = ({

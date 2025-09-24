@@ -1,3 +1,24 @@
+/**
+ * Composant FormField - Champ de formulaire réutilisable avec icône et validation
+ *
+ * Ce composant fournit un champ de formulaire standardisé avec :
+ * - Icône personnalisable
+ * - Gestion des erreurs
+ * - Styles cohérents
+ * - Support des attributs HTML standards
+ *
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} props.label - Le label du champ
+ * @param {string} [props.type='text'] - Le type du champ (text, email, password, etc.)
+ * @param {string} props.name - Le nom du champ (pour les formulaires)
+ * @param {string} props.value - La valeur du champ
+ * @param {Function} props.onChange - Fonction appelée lors du changement de valeur
+ * @param {string} [props.placeholder] - Texte d'aide affiché dans le champ
+ * @param {string} [props.error] - Message d'erreur à afficher
+ * @param {Function} [props.icon] - Fonction retournant l'icône SVG à afficher
+ * @param {boolean} [props.required=false] - Si le champ est obligatoire
+ * @param {string} [props.className=''] - Classes CSS additionnelles
+ */
 import React from 'react';
 
 const FormField = ({
