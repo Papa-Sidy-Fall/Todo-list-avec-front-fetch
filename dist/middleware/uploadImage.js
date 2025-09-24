@@ -10,13 +10,13 @@ const storage = multer.diskStorage({
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
 });
-// Filtre pour n'accepter que les images (les type acceptes)
+// Filtre pour accepter les images et les fichiers audio
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('audio/')) {
         cb(null, true);
     }
     else {
-        cb(new Error('Le fichier doit être une image'));
+        cb(new Error('Le fichier doit être une image ou un fichier audio'));
     }
 };
 //le chargement des images 

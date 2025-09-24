@@ -33,9 +33,15 @@ export class TacheController {
     }
     async create(req, res) {
         try {
+            console.log('=== CREATE TACHE REQUEST ===');
+            console.log('Headers:', req.headers);
+            console.log('Body:', req.body);
+            console.log('Files:', req.files);
+            console.log('File:', req.file);
             // Vérifier que les champs requis sont présents
             if (!req.body.titre || !req.body.description || !req.body.status) {
-                return res.status(400).json({ message: "Champs requis manquants" });
+                console.log('Champs manquants - Body:', req.body);
+                return res.status(400).json({ message: "Champs requis manquants", body: req.body });
             }
             // Convertir les données du formulaire
             const formData = {
@@ -55,12 +61,19 @@ export class TacheController {
             if (req.file) {
                 imageUrl = `/uploads/${req.file.filename}`;
             }
+            // Gérer l'upload d'audio
+            let audioUrl = null;
+            const audioFiles = req.files?.audio;
+            if (audioFiles && audioFiles.length > 0) {
+                audioUrl = `/uploads/${audioFiles[0].filename}`;
+            }
             // Préparer les données finales
             const newdata = {
                 ...data,
                 userId: userId,
                 assignedTo: data.assignedTo || null,
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                audioUrl: audioUrl
             };
             // Créer la tâche
             const tache = await service.create(newdata);

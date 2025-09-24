@@ -21,6 +21,7 @@ model Taches {
   userId      Int
   assignedTo  Int?
   imageUrl    String?
+  audioUrl    String?
   user        User   @relation(fields: [userId], references: [id])
   assignedUser User? @relation("AssignedTasks", fields: [assignedTo], references: [id])
 }

@@ -19,6 +19,7 @@ export declare class TacheService {
         assignedTo: number | null;
         userId: number;
         imageUrl: string | null;
+        audioUrl: string | null;
     }>;
 }
 //# sourceMappingURL=tacheService.d.ts.map

@@ -40,9 +40,16 @@ export class TacheController {
     }
     async create(req: Request<{}, {}, { titre: string; description: string; status: string; assignedTo?: string }>, res: Response) {
         try{
+            console.log('=== CREATE TACHE REQUEST ===');
+            console.log('Headers:', req.headers);
+            console.log('Body:', req.body);
+            console.log('Files:', (req as any).files);
+            console.log('File:', (req as any).file);
+
             // Vérifier que les champs requis sont présents
             if (!req.body.titre || !req.body.description || !req.body.status) {
-                return res.status(400).json({message: "Champs requis manquants"});
+                console.log('Champs manquants - Body:', req.body);
+                return res.status(400).json({message: "Champs requis manquants", body: req.body});
             }
 
             // Convertir les données du formulaire
@@ -67,12 +74,20 @@ export class TacheController {
                 imageUrl = `/uploads/${(req as { file?: Express.Multer.File }).file!.filename}`;
             }
 
+            // Gérer l'upload d'audio
+            let audioUrl = null;
+            const audioFiles = (req as any).files?.audio;
+            if (audioFiles && audioFiles.length > 0) {
+                audioUrl = `/uploads/${audioFiles[0].filename}`;
+            }
+
             // Préparer les données finales
             const newdata = {
              ...data,
              userId : userId,
              assignedTo: data.assignedTo || null,
-             imageUrl: imageUrl
+             imageUrl: imageUrl,
+             audioUrl: audioUrl
             };
 
             // Créer la tâche

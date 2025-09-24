@@ -4,10 +4,11 @@ import { z } from "zod";
 export type TacheCreateInput = z.infer<typeof tacheValidator>;
 export type TacheUpdateInput = z.infer<typeof tacheValidator.partial>;
 
-// Type pour la création complète avec userId et imageUrl
+// Type pour la création complète avec userId, imageUrl et audioUrl
 export type TacheCreateData = Omit<TacheCreateInput, 'assignedTo'> & {
   userId: number;
   imageUrl: string | null;
+  audioUrl: string | null;
   assignedTo: number | null;
 };
 

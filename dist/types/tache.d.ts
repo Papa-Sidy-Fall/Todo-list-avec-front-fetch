@@ -4,6 +4,7 @@ export type TacheUpdateInput = z.infer<typeof tacheValidator.partial>;
 export type TacheCreateData = Omit<TacheCreateInput, 'assignedTo'> & {
     userId: number;
     imageUrl: string | null;
+    audioUrl: string | null;
     assignedTo: number | null;
 };
 export type ZodValidationError = {
