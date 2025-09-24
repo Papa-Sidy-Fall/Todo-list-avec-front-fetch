@@ -5,6 +5,8 @@ import api from '../services/api';
 import TaskItem from './TaskItem';
 import TaskForm from './TaskForm';
 import Pagination from './Pagination';
+import TaskStats from './TaskStats';
+import TaskFilters from './TaskFilters';
 
 const TaskList = ({ onLogout }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -190,89 +192,15 @@ const TaskList = ({ onLogout }) => {
         </div>
 
         {/* Filter Buttons */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Filtrer les tâches</h3>
-            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {filteredTasks.length} tâche{filteredTasks.length > 1 ? 's' : ''} trouvée{filteredTasks.length > 1 ? 's' : ''}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => handleFilterChange('all')}
-              className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                activeFilter === 'all'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-              Toutes les tâches
-            </button>
-            <button
-              onClick={() => handleFilterChange('created')}
-              className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                activeFilter === 'created'
-                  ? 'bg-green-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Créées par moi
-            </button>
-            <button
-              onClick={() => handleFilterChange('assigned')}
-              className={`flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                activeFilter === 'assigned'
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-              Assignées à moi
-            </button>
-          </div>
-        </div>
+        <TaskFilters
+          activeFilter={activeFilter}
+          onFilterChange={handleFilterChange}
+          taskCount={filteredTasks.length}
+          className="mb-8"
+        />
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white p-6 rounded-2xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold mb-1">
-                  {filteredStatusCounts.EN_COURS}
-                </div>
-                <div className="text-yellow-100 font-medium">En cours</div>
-              </div>
-              <div className="w-12 h-12 bg-yellow-300 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-yellow-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-2xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold mb-1">
-                  {filteredStatusCounts.TERMINER}
-                </div>
-                <div className="text-green-100 font-medium">Terminé</div>
-              </div>
-              <div className="w-12 h-12 bg-green-300 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+        <TaskStats stats={filteredStatusCounts} className="mb-8" />
 
         {/* Error message */}
         {error && (
