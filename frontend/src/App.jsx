@@ -47,7 +47,7 @@ const AppContent = () => {
         </div>
       ) : currentView === 'register' ? (
         <div>
-          <Register onRegisterSuccess={handleRegisterSuccess} />
+          <Register onRegisterSuccess={handleRegisterSuccess} onSwitchToLogin={switchToLogin} />
           <div className="text-center">
             <p>Déjà un compte ?{' '}
               <button

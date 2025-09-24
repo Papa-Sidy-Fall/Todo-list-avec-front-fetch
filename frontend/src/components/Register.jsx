@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-const Register = ({ onRegisterSuccess }) => {
+const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
     nom: '',
     email: '',
@@ -10,7 +10,8 @@ const Register = ({ onRegisterSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const [successMessage, setSuccessMessage] = useState('');
+  const { register, login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +81,6 @@ const Register = ({ onRegisterSuccess }) => {
     setErrors({});
 
     try {
-      console.log('Sending register request', formData);
       const result = await register({
         nom: formData.nom,
         email: formData.email,
@@ -89,7 +89,8 @@ const Register = ({ onRegisterSuccess }) => {
       });
 
       if (result.success) {
-        onRegisterSuccess();
+        // Afficher le message de succès - l'utilisateur doit se connecter manuellement
+        setSuccessMessage('Inscription réussie ! Vous pouvez maintenant vous connecter avec vos identifiants.');
       } else {
         // Gérer les erreurs du backend
         if (result.errors && result.errors.length > 0) {
@@ -103,7 +104,6 @@ const Register = ({ onRegisterSuccess }) => {
         }
       }
     } catch (err) {
-      console.log('Register error', err);
       setErrors({ general: 'Erreur lors de l\'inscription' });
     } finally {
       setLoading(false);
@@ -133,6 +133,23 @@ const Register = ({ onRegisterSuccess }) => {
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
             {errors.general}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+            <div className="flex items-center mb-3">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              {successMessage}
+            </div>
+            <button
+              onClick={onSwitchToLogin}
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+            >
+              Aller à la page de connexion
+            </button>
           </div>
         )}
 
@@ -255,9 +272,9 @@ const Register = ({ onRegisterSuccess }) => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !!successMessage}
             className={`w-full py-3 px-4 rounded-lg text-white font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg ${
-              loading
+              loading || successMessage
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-green-600 hover:bg-green-700 active:scale-95'
             }`}
