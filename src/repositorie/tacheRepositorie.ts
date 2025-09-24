@@ -1,6 +1,7 @@
 import type { IRepository } from "./IRepository.js"
 import { prisma } from "../utils/prismclient.js"
 import type {Etat, Taches} from "@prisma/client"
+import type { TacheUpdateInput } from "../types/tache.js"
 export class TacheRepositorie implements IRepository<Taches>{
 
     async findAll(): Promise<Taches[]> {
@@ -80,8 +81,8 @@ export class TacheRepositorie implements IRepository<Taches>{
     async create(data: Omit<Taches, "id">): Promise<Taches> {
         return await prisma.taches.create({data})
     }
-   async update(id: number, data: any): Promise<Taches> {
-       return await prisma.taches.update({where: {id}, data})
+   async update(id: number, data: TacheUpdateInput): Promise<Taches> {
+       return await prisma.taches.update({where: {id}, data: data as any})
 
    }
     async delete(id: number): Promise<void> {

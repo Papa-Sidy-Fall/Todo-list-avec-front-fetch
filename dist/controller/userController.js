@@ -2,7 +2,7 @@ import { UserService } from "../service/userService.js";
 import bcrypt from "bcrypt";
 const service = new UserService();
 export class UserController {
-    async findAll(req, res) {
+    async findAll(_req, res) {
         try {
             const data = await service.findAll();
             res.status(200).json(data);

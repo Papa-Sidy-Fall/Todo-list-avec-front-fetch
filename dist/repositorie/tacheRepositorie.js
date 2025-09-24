@@ -74,7 +74,7 @@ export class TacheRepositorie {
         return await prisma.taches.create({ data });
     }
     async update(id, data) {
-        return await prisma.taches.update({ where: { id }, data });
+        return await prisma.taches.update({ where: { id }, data: data });
     }
     async delete(id) {
         await prisma.taches.delete({ where: { id } });

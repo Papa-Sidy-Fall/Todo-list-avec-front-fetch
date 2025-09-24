@@ -6,7 +6,7 @@ import { validateRegisterData, validateLoginData } from "../validator/userValida
 const service = new UserService()
 export class AuthController {
 
-   static async login(req: Request, res: Response) {
+   static async login(req: Request<{}, {}, { email: string; password: string }>, res: Response) {
     try {
         // Validation des données d'entrée
         const validation = validateLoginData(req.body);
@@ -63,7 +63,7 @@ export class AuthController {
     }
    }
 
-   static async register(req: Request, res: Response) {
+   static async register(req: Request<{}, {}, { nom: string; email: string; password: string; confirmPassword: string }>, res: Response) {
     try {
         // Validation des données
         const validation = validateRegisterData(req.body);

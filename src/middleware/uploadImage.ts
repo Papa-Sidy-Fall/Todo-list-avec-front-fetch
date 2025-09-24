@@ -1,5 +1,6 @@
 import multer from 'multer';
 import path from 'path';
+import type { Request } from 'express';
 
 // Configuration du stockage (le dossier sur le quelle  on stock les images et le nom des images )
 const storage = multer.diskStorage({
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
 });
 
 // Filtre pour n'accepter que les images (les type acceptes)
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype.startsWith('image/')) {
         cb(null, true);
     } else {

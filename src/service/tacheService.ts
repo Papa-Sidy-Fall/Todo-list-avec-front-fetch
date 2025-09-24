@@ -1,5 +1,6 @@
 import {TacheRepositorie} from "../repositorie/tacheRepositorie.js"
 import type {Taches,Etat} from "@prisma/client"
+import type { TacheCreateData, TacheUpdateInput } from "../types/tache.js"
 const repo = new TacheRepositorie()
 export class TacheService {
 
@@ -13,12 +14,12 @@ export class TacheService {
     async findById(id: number): Promise<Taches | null> {
            return await repo.findById(id)
     }
-    async create(data: any): Promise<Taches> {
+    async create(data: TacheCreateData): Promise<Taches> {
             const tache = await repo.create(data);
             // Retourner la tâche avec les informations de l'utilisateur
             return await repo.findById(tache.id) as Taches;
     }
-    async update(id: number, data: any): Promise<Taches> {
+    async update(id: number, data: TacheUpdateInput): Promise<Taches> {
              return await repo.update(id, data)
      }
     async delete(id: number): Promise<void> {

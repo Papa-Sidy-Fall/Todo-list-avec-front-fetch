@@ -1,12 +1,13 @@
-import  type{Request,Response} from "express"
+import type { Request, Response } from "express"
 import { TacheService } from "../service/tacheService.js"
 import type {Etat} from "@prisma/client"
 import {tacheValidator} from "../validator/tacheValidator.js"
 import { upload } from "../middleware/uploadImage.js"
+import type { ZodValidationError, ValidationError } from "../types/tache.js"
 
 const service = new TacheService()
 export class TacheController {
-     async findAll(req:Request, res:Response) {
+     async findAll(req: Request<{}, {}, {}, { page?: string; limit?: string }>, res: Response) {
         try{
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
@@ -26,7 +27,7 @@ export class TacheController {
            res.status(500).json({message:"Fall donner niewoul"});
         }
     }
-    async findById(req:Request, res:Response){
+    async findById(req: Request<{ id: string }>, res: Response) {
         try{
             const id = Number(req.params.id)
             const data = await service.findById(id)
@@ -37,7 +38,7 @@ export class TacheController {
             res.status(500).json({message:"fall guissoul id utilisateur bi"})
         }
     }
-    async create(req:Request, res:Response){
+    async create(req: Request<{}, {}, { titre: string; description: string; status: string; assignedTo?: string }>, res: Response) {
         try{
             // Vérifier que les champs requis sont présents
             if (!req.body.titre || !req.body.description || !req.body.status) {
@@ -55,15 +56,15 @@ export class TacheController {
             // Validation avec Zod
             const data = tacheValidator.parse(formData);
 
-            const userId = (req as any).user?.userId;
+            const userId = (req as { user?: { userId: number } }).user?.userId;
             if (!userId) {
                 return res.status(401).json({message: "Utilisateur non authentifié"});
             }
 
             // Gérer l'upload d'image
             let imageUrl = null;
-            if ((req as any).file) {
-                imageUrl = `/uploads/${(req as any).file.filename}`;
+            if ((req as { file?: Express.Multer.File }).file) {
+                imageUrl = `/uploads/${(req as { file?: Express.Multer.File }).file!.filename}`;
             }
 
             // Préparer les données finales
@@ -81,15 +82,15 @@ export class TacheController {
         }
         catch(error)
         {
-            if ((error as any).issues) {
-                res.status(400).json({message:"Erreurs de validation", errors: (error as any).issues.map((i: any) => ({field: i.path.join('.'), message: i.message}))});
+            if ((error as ZodValidationError).issues) {
+                res.status(400).json({message:"Erreurs de validation", errors: (error as ZodValidationError).issues.map((i) => ({field: i.path.join('.'), message: i.message}))});
             } else {
                 res.status(500).json({message:"Erreur lors de la création de la tâche", error: (error as Error).message});
             }
         }
 
     }
-    async update(req:Request, res:Response){
+    async update(req: Request<{ id: string }, {}, any>, res: Response) {
 
         try{
             const id = Number(req.params.id)
@@ -97,15 +98,15 @@ export class TacheController {
             const updatedData = await service.update(id, data)
             res.status(200).json({success: true, task: updatedData})
         }catch(error){
-            if ((error as any).issues) {
-                res.status(400).json({message:"Erreurs de validation", errors: (error as any).issues.map((i: any) => ({field: i.path.join('.'), message: i.message}))})
+            if ((error as ZodValidationError).issues) {
+                res.status(400).json({message:"Erreurs de validation", errors: (error as ZodValidationError).issues.map((i) => ({field: i.path.join('.'), message: i.message}))})
             } else {
                 res.status(500).json({message:"fall nagouwoul mise a jour bi"})
             }
         }
     }
    
-    async delete(req:Request, res:Response){
+    async delete(req: Request<{ id: string }>, res: Response) {
         try {
             const id = Number(req.params.id)
             await service.delete(id)
@@ -115,7 +116,7 @@ export class TacheController {
         }
 
     }
-    async updateStatus(req:Request, res:Response){
+    async updateStatus(req: Request<{ id: string; status: string }>, res: Response) {
         try {
             const id = Number(req.params.id);
             const status = req.params.status as Etat; //on le force pour qu'il soit de type etat
