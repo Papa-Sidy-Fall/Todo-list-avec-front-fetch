@@ -58,8 +58,9 @@ export class TacheController {
             }
             // Gérer l'upload d'image
             let imageUrl = null;
-            if (req.file) {
-                imageUrl = `/uploads/${req.file.filename}`;
+            const imageFiles = req.files?.image;
+            if (imageFiles && imageFiles.length > 0) {
+                imageUrl = `/uploads/${imageFiles[0].filename}`;
             }
             // Gérer l'upload d'audio
             let audioUrl = null;

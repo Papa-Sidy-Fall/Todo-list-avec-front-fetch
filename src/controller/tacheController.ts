@@ -70,8 +70,9 @@ export class TacheController {
 
             // Gérer l'upload d'image
             let imageUrl = null;
-            if ((req as { file?: Express.Multer.File }).file) {
-                imageUrl = `/uploads/${(req as { file?: Express.Multer.File }).file!.filename}`;
+            const imageFiles = (req as any).files?.image;
+            if (imageFiles && imageFiles.length > 0) {
+                imageUrl = `/uploads/${imageFiles[0].filename}`;
             }
 
             // Gérer l'upload d'audio
