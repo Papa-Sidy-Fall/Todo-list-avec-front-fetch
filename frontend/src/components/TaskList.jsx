@@ -39,9 +39,7 @@ const TaskList = ({ onLogout }) => {
   const fetchTasks = async (page = currentPage, limit = itemsPerPage) => {
     try {
       setLoading(true);
-      console.log('Fetching tasks:', { page, limit });
       const response = await api.getTasks(page, limit);
-      console.log('Tasks response:', response);
       setTasks(response.data);
       setTotalItems(response.total);
       setTotalPages(response.totalPages);
@@ -83,7 +81,6 @@ const TaskList = ({ onLogout }) => {
   };
 
   const handleTaskCreated = () => {
-    console.log('Task created, refreshing tasks...');
     fetchTasks(currentPage, itemsPerPage);
     setShowTaskForm(false); // Cacher le formulaire après création
   };

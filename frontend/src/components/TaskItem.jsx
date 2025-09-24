@@ -252,42 +252,19 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
         </p>
 
         {/* Image */}
-        {(() => {
-          console.log('=== TASK IMAGE DEBUG ===');
-          console.log('Task ID:', task.id);
-          console.log('Task imageUrl:', task.imageUrl);
-          console.log('Task title:', task.titre);
-          console.log('Full URL would be:', `http://localhost:3080${task.imageUrl}`);
-
-          if (task.imageUrl) {
-            return (
-              <div className="mb-6">
-                <div className="relative">
-                  <img
-                    src={`http://localhost:3080${task.imageUrl}`}
-                    alt="Image de la tâche"
-                    className="w-full h-64 object-cover rounded-xl shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300"
-                    onLoad={() => console.log('✅ Image chargée avec succès:', task.imageUrl)}
-                    onError={(e) => {
-                      console.error('❌ Erreur de chargement d\'image:', task.imageUrl);
-                      console.error('URL complète:', `http://localhost:3080${task.imageUrl}`);
-                      console.error('Erreur détaillée:', e);
-                      // Afficher un placeholder au lieu de cacher l'image
-                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD4KPC9zdmc+';
-                      e.target.alt = 'Image non disponible';
-                    }}
-                  />
-                  <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-                    📷 Image
-                  </div>
-                </div>
-              </div>
-            );
-          } else {
-            console.log('ℹ️ Aucune imageUrl pour cette tâche');
-            return null;
-          }
-        })()}
+        {task.imageUrl && (
+          <div className="mb-6">
+            <img
+              src={`http://localhost:3080${task.imageUrl}`}
+              alt="Image de la tâche"
+              className="w-full h-64 object-cover rounded-xl shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300"
+              onError={(e) => {
+                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5JbWFnZSBub24gZGlzcG9uaWJsZTwvdGV4dD4KPC9zdmc+';
+                e.target.alt = 'Image non disponible';
+              }}
+            />
+          </div>
+        )}
 
         {/* Audio */}
         {task.audioUrl && (

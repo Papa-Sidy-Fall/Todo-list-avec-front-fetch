@@ -33,15 +33,9 @@ export class TacheController {
     }
     async create(req, res) {
         try {
-            console.log('=== CREATE TACHE REQUEST ===');
-            console.log('Headers:', req.headers);
-            console.log('Body:', req.body);
-            console.log('Files:', req.files);
-            console.log('File:', req.file);
             // Vérifier que les champs requis sont présents
             if (!req.body.titre || !req.body.description || !req.body.status) {
-                console.log('Champs manquants - Body:', req.body);
-                return res.status(400).json({ message: "Champs requis manquants", body: req.body });
+                return res.status(400).json({ message: "Champs requis manquants" });
             }
             // Convertir les données du formulaire
             const formData = {
