@@ -2,8 +2,8 @@
  * Service de planification des tâches - Gestion automatique des workflows
  *
  * Ce service gère les changements automatiques de statut des tâches :
- * - Passage de A_FAIRE à EN_COURS après 30 minutes
- * - Passage de EN_COURS à TERMINER après 30 minutes supplémentaires
+ * - Passage de A_FAIRE à EN_COURS après 10 secondes
+ * - Passage de EN_COURS à TERMINER après 30 secondes supplémentaires
  * - Envoi de notifications lors des changements
  */
 /**

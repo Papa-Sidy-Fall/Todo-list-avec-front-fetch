@@ -282,7 +282,7 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
           </div>
         )}
 
-        {/* Informations utilisateur */}
+        {/* Informations utilisateur et dates */}
         <div className="space-y-3 mb-6">
           {task.user && (
             <div className="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -311,6 +311,51 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
               </div>
             </div>
           )}
+
+          {/* Dates de la tâche */}
+          <div className="grid grid-cols-1 gap-2">
+            {task.createdAt && (
+              <div className="flex items-center p-2 bg-green-50 rounded-lg">
+                <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="flex-1">
+                  <span className="text-xs font-medium text-green-700">Créée le</span>
+                  <div className="text-xs text-green-600">
+                    {new Date(task.createdAt).toLocaleString('fr-FR')}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {task.startedAt && (
+              <div className="flex items-center p-2 bg-yellow-50 rounded-lg">
+                <svg className="w-4 h-4 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <div className="flex-1">
+                  <span className="text-xs font-medium text-yellow-700">Démarrée le</span>
+                  <div className="text-xs text-yellow-600">
+                    {new Date(task.startedAt).toLocaleString('fr-FR')}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {task.completedAt && (
+              <div className="flex items-center p-2 bg-blue-50 rounded-lg">
+                <svg className="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="flex-1">
+                  <span className="text-xs font-medium text-blue-700">Terminée le</span>
+                  <div className="text-xs text-blue-600">
+                    {new Date(task.completedAt).toLocaleString('fr-FR')}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Actions */}

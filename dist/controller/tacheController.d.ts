@@ -23,5 +23,11 @@ export declare class TacheController {
         id: string;
         status: string;
     }>, res: Response): Promise<void>;
+    getNotifications(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+    markNotificationRead(req: Request<{
+        id: string;
+    }>, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+    markAllNotificationsRead(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+    getUnreadNotificationCount(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 }
 //# sourceMappingURL=tacheController.d.ts.map

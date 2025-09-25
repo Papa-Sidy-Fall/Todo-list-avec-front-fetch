@@ -4,6 +4,7 @@ import tacheroute from "./route/tacheRoute.js";
 import userRoute from "./route/userRoute.js";
 import authRoute from "./route/AuthRoute.js";
 import { authMiddleware } from "./middleware/Auth.js";
+import { startTaskScheduler } from "./services/taskScheduler.js";
 const app = express();
 // Configuration CORS
 app.use(cors({
@@ -21,5 +22,7 @@ app.use("/taches", tacheroute);
 const port = process.env.PORT || 3080;
 app.listen(port, () => {
     console.log(`http://localhost:${port}`);
+    // Démarrer le scheduler automatique des tâches
+    startTaskScheduler();
 });
 //# sourceMappingURL=server.js.map

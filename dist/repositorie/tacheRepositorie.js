@@ -80,9 +80,19 @@ export class TacheRepositorie {
         await prisma.taches.delete({ where: { id } });
     }
     async updateStatus(id, newStatus) {
+        const updateData = { status: newStatus };
+        // Mettre à jour les dates selon le nouveau statut
+        if (newStatus === 'EN_COURS') {
+            updateData.startedAt = new Date();
+        }
+        else if (newStatus === 'TERMINER') {
+            updateData.completedAt = new Date();
+            // S'assurer que startedAt est défini si on passe directement à TERMINER
+            updateData.startedAt = { set: updateData.startedAt || new Date() };
+        }
         return await prisma.taches.update({
             where: { id },
-            data: { status: newStatus }
+            data: updateData
         });
     }
 }

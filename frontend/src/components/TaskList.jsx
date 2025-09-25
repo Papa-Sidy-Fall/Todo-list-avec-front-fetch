@@ -7,6 +7,7 @@ import TaskForm from './TaskForm';
 import Pagination from './Pagination';
 import TaskStats from './TaskStats';
 import TaskFilters from './TaskFilters';
+import NotificationBell from './NotificationBell';
 
 const TaskList = ({ onLogout }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -179,15 +180,18 @@ const TaskList = ({ onLogout }) => {
                 </div>
               )}
             </div>
-            <button
-              onClick={onLogout}
-              className="flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
-            >
+            <div className="flex items-center space-x-4">
+              <NotificationBell />
+              <button
+                onClick={onLogout}
+                className="flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+              >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
               Déconnexion
             </button>
+            </div>
           </div>
         </div>
 

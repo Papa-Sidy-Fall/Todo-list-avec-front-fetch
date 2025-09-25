@@ -24,7 +24,7 @@ const TaskForm = ({ onTaskCreated }) => {
   const [formData, setFormData] = useState({
     titre: '',
     description: '',
-    status: 'EN_COURS',
+    status: 'A_FAIRE',
     assignedTo: '',
   });
   const [selectedImage, setSelectedImage] = useState(null);
@@ -234,7 +234,7 @@ const TaskForm = ({ onTaskCreated }) => {
       setFormData({
         titre: '',
         description: '',
-        status: 'EN_COURS',
+        status: 'A_FAIRE',
         assignedTo: '',
       });
       setSelectedImage(null);

@@ -1,6 +1,7 @@
 import { TacheService } from "../service/tacheService.js";
 import { tacheValidator } from "../validator/tacheValidator.js";
 import { upload } from "../middleware/uploadImage.js";
+import { getUserNotifications, markNotificationAsRead, markAllNotificationsAsRead, getUnreadNotificationCount, createNotification } from "../services/notificationService.js";
 const service = new TacheService();
 export class TacheController {
     async findAll(req, res) {
@@ -117,11 +118,79 @@ export class TacheController {
         try {
             const id = Number(req.params.id);
             const status = req.params.status; //on le force pour qu'il soit de type etat
+            // Récupérer les informations de la tâche avant la mise à jour pour les notifications
+            const taskBeforeUpdate = await service.findById(id);
+            const userId = req.user?.userId;
+            const userName = req.user?.nom;
             const data = await service.updateStatus(id, status);
+            // Créer une notification si la tâche est marquée comme terminée par l'utilisateur
+            if (status === 'TERMINER' && taskBeforeUpdate && userId) {
+                await createNotification({
+                    userId: userId,
+                    taskId: id,
+                    type: 'TASK_COMPLETED',
+                    message: `🎉 Vous avez marqué votre tâche "${taskBeforeUpdate.titre}" comme terminée !`
+                });
+            }
             res.status(201).json({ data, message: "le status est modifier" });
         }
         catch (error) {
             res.status(400).json({ message: "Erreur serveur" });
+        }
+    }
+    // Méthodes de notifications
+    async getNotifications(req, res) {
+        try {
+            const userId = req.user?.userId;
+            if (!userId) {
+                return res.status(401).json({ message: "Utilisateur non authentifié" });
+            }
+            const limit = parseInt(req.query.limit) || 50;
+            const notifications = await getUserNotifications(userId, limit);
+            res.status(200).json(notifications);
+        }
+        catch (error) {
+            res.status(500).json({ message: "Erreur lors de la récupération des notifications" });
+        }
+    }
+    async markNotificationRead(req, res) {
+        try {
+            const userId = req.user?.userId;
+            if (!userId) {
+                return res.status(401).json({ message: "Utilisateur non authentifié" });
+            }
+            const notificationId = parseInt(req.params.id);
+            await markNotificationAsRead(notificationId, userId);
+            res.status(200).json({ message: "Notification marquée comme lue" });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Erreur lors du marquage de la notification" });
+        }
+    }
+    async markAllNotificationsRead(req, res) {
+        try {
+            const userId = req.user?.userId;
+            if (!userId) {
+                return res.status(401).json({ message: "Utilisateur non authentifié" });
+            }
+            await markAllNotificationsAsRead(userId);
+            res.status(200).json({ message: "Toutes les notifications ont été marquées comme lues" });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Erreur lors du marquage des notifications" });
+        }
+    }
+    async getUnreadNotificationCount(req, res) {
+        try {
+            const userId = req.user?.userId;
+            if (!userId) {
+                return res.status(401).json({ message: "Utilisateur non authentifié" });
+            }
+            const count = await getUnreadNotificationCount(userId);
+            res.status(200).json({ count });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Erreur lors du comptage des notifications" });
         }
     }
 }

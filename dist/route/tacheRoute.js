@@ -10,5 +10,10 @@ router.get("/:id", tacheController.findById);
 router.put("/:id", authMiddleware, authorisationMiddleware, tacheController.update);
 router.delete("/:id", authMiddleware, authorisationMiddleware, tacheController.delete);
 router.patch("/:id/:status", authMiddleware, authorisationMiddleware, tacheController.updateStatus);
+// Routes des notifications
+router.get("/notifications", authMiddleware, tacheController.getNotifications);
+router.patch("/notifications/:id/read", authMiddleware, tacheController.markNotificationRead);
+router.patch("/notifications/mark-all-read", authMiddleware, tacheController.markAllNotificationsRead);
+router.get("/notifications/unread-count", authMiddleware, tacheController.getUnreadNotificationCount);
 export default router;
 //# sourceMappingURL=tacheRoute.js.map
