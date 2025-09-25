@@ -27,7 +27,6 @@ class ApiService {
     };
 
     try {
-      console.log('Fetching', url, config);
       const response = await fetch(url, config);
       let data;
       if (response.status === 204) {
@@ -42,7 +41,6 @@ class ApiService {
 
       return data;
     } catch (error) {
-      console.error('API Error:', error);
       throw error;
     }
   }

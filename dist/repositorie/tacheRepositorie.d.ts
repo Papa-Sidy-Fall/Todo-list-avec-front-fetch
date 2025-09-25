@@ -21,6 +21,10 @@ export declare class TacheRepositorie implements IRepository<Taches> {
         userId: number;
         imageUrl: string | null;
         audioUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        startedAt: Date | null;
+        completedAt: Date | null;
     }>;
 }
 //# sourceMappingURL=tacheRepositorie.d.ts.map

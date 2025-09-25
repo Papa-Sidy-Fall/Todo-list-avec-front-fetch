@@ -240,6 +240,18 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
             )}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Déjà un compte ?{' '}
+            <button
+              onClick={onSwitchToLogin}
+              className="text-green-600 hover:text-green-700 font-medium underline focus:outline-none"
+            >
+              Se connecter
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

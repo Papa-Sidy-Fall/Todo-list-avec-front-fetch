@@ -14,16 +14,21 @@ datasource db {
 }
 
 model Taches {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   titre       String
   description String
-  status      Etat   @default(EN_COURS)
+  status      Etat     @default(A_FAIRE)
   userId      Int
   assignedTo  Int?
   imageUrl    String?
   audioUrl    String?
-  user        User   @relation(fields: [userId], references: [id])
-  assignedUser User? @relation("AssignedTasks", fields: [assignedTo], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  startedAt   DateTime?
+  completedAt DateTime?
+  user        User     @relation(fields: [userId], references: [id])
+  assignedUser User?   @relation("AssignedTasks", fields: [assignedTo], references: [id])
+  notifications Notification[]
 }
 
 enum Etat {
@@ -33,10 +38,34 @@ enum Etat {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   nom            String
-  email          String   @unique
+  email          String          @unique
   password       String
   taches         Taches[]
-  assignedTasks  Taches[] @relation("AssignedTasks")
+  assignedTasks  Taches[]        @relation("AssignedTasks")
+  notifications  Notification[]
+}
+
+model Notification {
+  id        Int                    @id @default(autoincrement())
+  message   String
+  type      NotificationType
+  read      Boolean                @default(false)
+  userId    Int
+  taskId    Int?
+  createdAt DateTime               @default(now())
+  user      User                   @relation(fields: [userId], references: [id])
+  task      Taches?                @relation(fields: [taskId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  TASK_COMPLETED
+  TASK_MODIFIED
+  TASK_DELETED
+  TASK_ASSIGNED
 }

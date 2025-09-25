@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -205,6 +205,18 @@ const Login = ({ onLoginSuccess }) => {
             )}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Pas encore de compte ?{' '}
+            <button
+              onClick={onSwitchToRegister}
+              className="text-blue-600 hover:text-blue-700 font-medium underline focus:outline-none"
+            >
+              S'inscrire
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

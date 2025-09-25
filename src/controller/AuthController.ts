@@ -55,7 +55,6 @@ export class AuthController {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la connexion:', error);
         res.status(500).json({
             success: false,
             message: 'Erreur serveur lors de la connexion'
@@ -113,7 +112,6 @@ export class AuthController {
         });
 
     } catch (error) {
-        console.error('Erreur lors de l\'inscription:', error);
         res.status(500).json({
             success: false,
             message: 'Erreur serveur lors de l\'inscription'

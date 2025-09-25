@@ -10,6 +10,10 @@ export type TacheCreateData = Omit<TacheCreateInput, 'assignedTo'> & {
   imageUrl: string | null;
   audioUrl: string | null;
   assignedTo: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  startedAt: Date | null;
+  completedAt: Date | null;
 };
 
 // Types pour les erreurs Zod

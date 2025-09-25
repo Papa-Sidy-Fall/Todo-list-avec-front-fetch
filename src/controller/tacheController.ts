@@ -81,7 +81,11 @@ export class TacheController {
              userId : userId,
              assignedTo: data.assignedTo || null,
              imageUrl: imageUrl,
-             audioUrl: audioUrl
+             audioUrl: audioUrl,
+             createdAt: new Date(),
+             updatedAt: new Date(),
+             startedAt: null,
+             completedAt: null
             };
 
             // Créer la tâche
